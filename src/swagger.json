@@ -14,22 +14,12 @@
       "userSchema": {
         "type": "object",
         "example": {
-          "user": {
-            "id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
-            "name": "André Luiz",
-            "email": "email@email.com",
-            "admin": false,
-            "created_at": "2021-09-23T01:13:48.452Z",
-            "updated_at": "2021-09-23T01:13:48.452Z"
-          },
-          "userAdmin": {
-            "id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb7e",
-            "name": "Jessica",
-            "email": "jessica@email.com",
-            "admin": true,
-            "created_at": "2021-09-23T01:13:48.452Z",
-            "updated_at": "2021-09-23T01:13:48.452Z"
-          }
+          "id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+          "name": "André Luiz",
+          "email": "email@email.com",
+          "admin": false,
+          "created_at": "2021-09-23T01:13:48.452Z",
+          "updated_at": "2021-09-23T01:13:48.452Z"
         },
         "properties": {
           "id": {
@@ -87,7 +77,6 @@
       "userIdHeaderParam": {
         "in": "header",
         "name": "user_id",
-        "description": "O Id de um usuário do tipo admin.",
         "required": true,
         "schema": {
           "type": "string",
@@ -105,7 +94,7 @@
     },
     "requestBodies": {
       "createUser": {
-        "description": "Um objeto (JSON) contendo o nome e e-mail do usuário.",
+        "description": "Informações ```obrigatórias``` para a criação de um novo usuário.",
         "required": true,
         "content": {
           "application/json": {
@@ -135,7 +124,8 @@
         "tags": [
           "User"
         ],
-        "description": "Listar usuários",
+        "summary": "Listar todos os usuários",
+        "description": "Somente usuários do tipo ```admin``` podem ter acesso.",
         "parameters": [
           {
             "$ref": "#/components/parameters/userIdHeaderParam"
@@ -143,20 +133,17 @@
         ],
         "responses": {
           "201": {
-            "description": "Success",
+            "description": "Operação realizada com sucesso",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/usersSchema"
-                  }
+                  "$ref": "#/components/schemas/usersSchema"
                 }
               }
             }
           },
           "400": {
-            "description": "Error",
+            "description": "O usuário não possui permissão ou não foi encontrado",
             "content": {
               "application/json": {
                 "schema": {
@@ -177,13 +164,13 @@
         "tags": [
           "User"
         ],
-        "description": "Criar um usuário",
+        "summary": "Criar um usuário",
         "requestBody": {
           "$ref": "#/components/requestBodies/createUser"
         },
         "responses": {
           "201": {
-            "description": "Success",
+            "description": "Operação realizada com sucesso",
             "content": {
               "application/json": {
                 "schema": {
@@ -193,7 +180,7 @@
             }
           },
           "400": {
-            "description": "Error",
+            "description": "E-mail já está em uso.",
             "content": {
               "application/json": {
                 "schema": {
@@ -201,7 +188,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "example": "User not found"
+                      "example": "Email is already taken"
                     }
                   }
                 }
@@ -216,6 +203,7 @@
         "tags": [
           "User"
         ],
+        "summary": "Retornar dados de um usuário",
         "parameters": [
           {
             "$ref": "#/components/parameters/userIdPathParam"
@@ -230,10 +218,10 @@
                 }
               }
             },
-            "description": "Success"
+            "description": "Operação realizada com sucesso."
           },
           "404": {
-            "description": "Error",
+            "description": "Usuário não encontrado.",
             "content": {
               "application/json": {
                 "schema": {
@@ -256,7 +244,7 @@
         "tags": [
           "User"
         ],
-        "description": "",
+        "summary": "Alterar usuário para admin",
         "parameters": [
           {
             "$ref": "#/components/parameters/userIdPathParam"
@@ -264,7 +252,7 @@
         ],
         "responses": {
           "201": {
-            "description": "Success",
+            "description": "Operação realizada com sucesso.",
             "content": {
               "application/json": {
                 "schema": {
@@ -274,7 +262,7 @@
             }
           },
           "404": {
-            "description": "Error",
+            "description": "Usuário não encontrado.",
             "content": {
               "application/json": {
                 "schema": {
