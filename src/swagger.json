@@ -1,0 +1,296 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Desafio: Documentando com Swagger",
+    "description": "Documentação da API do desafio \"Introdução ao SOLID\" do Ignite - Rocketseat",
+    "version": "1.0.0",
+    "contact": {
+      "email": "algazigiotti@gmail.com",
+      "name": "André Luiz Gagliardi Zigiotti"
+    }
+  },
+  "components": {
+    "schemas": {
+      "userSchema": {
+        "type": "object",
+        "example": {
+          "user": {
+            "id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+            "name": "André Luiz",
+            "email": "email@email.com",
+            "admin": false,
+            "created_at": "2021-09-23T01:13:48.452Z",
+            "updated_at": "2021-09-23T01:13:48.452Z"
+          },
+          "userAdmin": {
+            "id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb7e",
+            "name": "Jessica",
+            "email": "jessica@email.com",
+            "admin": true,
+            "created_at": "2021-09-23T01:13:48.452Z",
+            "updated_at": "2021-09-23T01:13:48.452Z"
+          }
+        },
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+          },
+          "name": {
+            "type": "string",
+            "example": "André Luiz"
+          },
+          "email": {
+            "type": "string",
+            "example": "email@email.com"
+          },
+          "admin": {
+            "type": "boolean",
+            "example": false
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2021-09-23T01:13:48.452Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "example": "2021-09-23T01:13:48.452Z"
+          }
+        }
+      },
+      "usersSchema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/userSchema"
+        },
+        "example": [
+          {
+            "id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+            "name": "André Luiz",
+            "email": "email@email.com",
+            "admin": false,
+            "created_at": "2021-09-23T01:13:48.452Z",
+            "updated_at": "2021-09-23T01:13:48.452Z"
+          },
+          {
+            "id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb7e",
+            "name": "Jessica",
+            "email": "jessica@email.com",
+            "admin": true,
+            "created_at": "2021-09-23T01:13:48.452Z",
+            "updated_at": "2021-09-23T01:13:48.452Z"
+          }
+        ]
+      }
+    },
+    "parameters": {
+      "userIdHeaderParam": {
+        "in": "header",
+        "name": "user_id",
+        "description": "O Id de um usuário do tipo admin.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+        }
+      },
+      "userIdPathParam": {
+        "in": "path",
+        "name": "user_id",
+        "schema": {
+          "type": "string",
+          "example": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+        }
+      }
+    },
+    "requestBodies": {
+      "createUser": {
+        "description": "Um objeto (JSON) contendo o nome e e-mail do usuário.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "required": true,
+                  "example": "André Luiz"
+                },
+                "email": {
+                  "type": "string",
+                  "required": true,
+                  "example": "email@email.com"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Listar usuários",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userIdHeaderParam"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/usersSchema"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "User is not an admin"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Criar um usuário",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/createUser"
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userIdPathParam"
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userSchema"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "404": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/admin": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userIdPathParam"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
